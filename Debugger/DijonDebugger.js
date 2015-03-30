@@ -134,7 +134,7 @@ DijonDebugger.prototype.showProps = function(obj){
 
 DijonDebugger.prototype.onPropChange = function(e){
     var value   = parseInt($(e.currentTarget).val()),
-        currentVal = $(e.currentTarget).data('val')
+        currentVal = $(e.currentTarget).data('val'),
         type    = $(e.currentTarget).data('type'),
         propStr = $(e.currentTarget).data('prop'),
         propArr,
@@ -157,6 +157,9 @@ DijonDebugger.prototype.onPropChange = function(e){
     }else{
         this.selectedObject[propStr] = value;
     }
+
+    $(e.currentTarget).data('val', value);
+
 };
 
 DijonDebugger.prototype.loadScript = function(url, callback)
