@@ -148,8 +148,7 @@ Phaser.Plugin.DijonDebugger.prototype.onSelectObject = function(e){
     }
 
     var obj = this.dict[name];
-    var objType = obj.constructor.toString();
-    this.$info.find("h3#name").html(name + '&nbsp;&nbsp;(' + objType + ')');
+    this.$info.find("h3#name").html(name + '&nbsp;&nbsp;(' + obj.constructor + ')');
     this.$props.empty();
 
     this.selectedObject = obj;
