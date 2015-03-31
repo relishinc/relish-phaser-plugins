@@ -1,19 +1,15 @@
-var $;
-var DijonDebugger = function (game, parent) {
-    this.enabled = true;
+Phaser.Plugin.DijonDebugger = function (game, parent) {
     Phaser.Plugin.call(this, game, parent);
     this.buildInterface();
 };
 
 //  Extends the Phaser.Plugin template, setting up values we need
-DijonDebugger.prototype = Object.create(Phaser.Plugin.prototype);
-DijonDebugger.prototype.constructor = DijonDebugger;
+Phaser.Plugin.DijonDebugger.prototype = Object.create(Phaser.Plugin.prototype);
 
-DijonDebugger.prototype.init = function(){
+var p = Phaser.Plugin.DijonDebugger.prototype;
+p.constructor = Phaser.Plugin.DijonDebugger;
 
-};
-
-DijonDebugger.prototype.buildInterface = function(){
+p.buildInterface = function(){
     this.openWindow();
     this.debugWindow.PhaserGame = this.game;
     this.debugWindow.debugger = this;
@@ -25,25 +21,25 @@ DijonDebugger.prototype.buildInterface = function(){
 };
 
 
-DijonDebugger.prototype.openWindow = function(){
-    this.debugWindow = window.open('','DijonDebugger','height=600,width=800');
+p.openWindow = function(){
+    this.debugWindow = window.open('','Phaser.Plugin.DijonDebugger','height=600,width=800');
 };
 
-DijonDebugger.prototype.addHTML = function(){
+p.addHTML = function(){
     this.debugWindow.document.body.innerHTML = this.getHTML();
 };
 
-DijonDebugger.prototype.loadJQuery = function(){
+p.loadJQuery = function(){
     this.loadScript('//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js', 'onJQueryLoaded');
 };
 
-DijonDebugger.prototype.onJQueryLoaded = function(){
+p.onJQueryLoaded = function(){
     $ = window.$ = window.jQuery;
     this.setJQueryVariables();
     this.refresh();
 };
 
-DijonDebugger.prototype.setJQueryVariables = function(){
+p.setJQueryVariables = function(){
     var self = this;
 
     this.$doc = $(this.debugWindow.document);
@@ -65,7 +61,7 @@ DijonDebugger.prototype.setJQueryVariables = function(){
     this.$refreshbutton.on('click', function(){self.refresh();});
 };
 
-DijonDebugger.prototype.getIncrement = function(){
+p.getIncrement = function(){
     var val = this.currentInput.val().toString(),
         valArr,
         len = 0,
@@ -85,27 +81,27 @@ DijonDebugger.prototype.getIncrement = function(){
     }
 };
 
-DijonDebugger.prototype.onInputFocusOut = function(){
+p.onInputFocusOut = function(){
     this.currentInput = null;
 };
 
-DijonDebugger.prototype.onInputFocus = function(e){
+p.onInputFocus = function(e){
     this.currentInput = $(e.currentTarget);
 };
 
-DijonDebugger.prototype.getHTML = function(){
+p.getHTML = function(){
     return '<html><head><title>Dijon Debugger</title><style>html, body{margin:0; padding:0; width:100%; height:100%;}body{font-family:Arial; position:relative; width:100%; height:100%;} label, input{float:left;} label{width:75px;} input{width:100px; margin-right:20px;} li{float:left; width:100%; padding-bottom:5px} prop_input{float:left; padding-right:10px; width:200px;} #refresh{position:absolute; bottom:40px; right:40px; font-weight:bold; font-size:18px; padding:10px;} #world, #stage{width:50%; position:relative; float:left;} #main{padding:20px; position:relative;} #groups, #info {position: relative; float: left; width: 100%;} #groups{padding-bottom: 25px; border-bottom: 1px solid grey;}"}</style></head><body><div id="main"><div id="groups"><div id="world"><h2>World</h2><select></select></div><div id="stage"><h2>Stage</h2><select></select></div></div><div id="info"><h2>Info</h2><h3 id="name"></h3><ul id="props" style="list-style-type:none; margin:0; padding:0;"></ul></div></div><button id="refresh">REFRESH</button></body></html>';
 };
 
 /**
 * This is run when the plugins update during the core game loop.
 */
-DijonDebugger.prototype.update = function () {
+p.update = function () {
     if(this.enabled){
     }
 };
 
-DijonDebugger.prototype.refresh = function(){
+p.refresh = function(){
     this.dict = {};
     this.$worldopts.empty().append('<option value="">Select an item</option>');
     this.$stageopts.empty().append('<option value="">Select an item</option>');
@@ -113,13 +109,13 @@ DijonDebugger.prototype.refresh = function(){
     this.populate(this.$stageopts, this.game.stage);
 };
 
-DijonDebugger.prototype.populate = function($opts, group){
+p.populate = function($opts, group){
     this.optsHTML = '';
     _.each(group.children, this.addOption, this);
     $opts.append(this.optsHTML);
 };
 
-DijonDebugger.prototype.addOption = function(obj){
+p.addOption = function(obj){
     var name = obj.name || (obj.parent.name + '_' + obj.parent.getChildIndex(obj)).toString();
     if (name === '__world') return false;
 
@@ -134,7 +130,7 @@ DijonDebugger.prototype.addOption = function(obj){
     }
 };
 
-DijonDebugger.prototype.onSelectObject = function(e){
+p.onSelectObject = function(e){
     var name = $(e.currentTarget).val();
     this.$info.find("h3#name").empty();
 
@@ -150,11 +146,11 @@ DijonDebugger.prototype.onSelectObject = function(e){
     this.selectedObject = obj;
 };
 
-DijonDebugger.prototype.showProps = function(obj){
+p.showProps = function(obj){
     var i, prop, type, html = '';
-    for (i = 0; i < DijonDebugger.PROPS_LIST.length; i ++){
+    for (i = 0; i < Phaser.Plugin.DijonDebugger.PROPS_LIST.length; i ++){
         html = '<li>';
-        prop = DijonDebugger.PROPS_LIST[i];
+        prop = Phaser.Plugin.DijonDebugger.PROPS_LIST[i];
 
         type = prop.type || 'number';
 
@@ -178,12 +174,12 @@ DijonDebugger.prototype.showProps = function(obj){
     }
 };
 
-DijonDebugger.prototype.centerAnchor = function(){
+p.centerAnchor = function(){
     this.selectedObject.anchor.set(0.5);
     this.updateProps(this.selectedObject);
 };
 
-DijonDebugger.prototype.centerPivot = function(){
+p.centerPivot = function(){
     var scale = this.selectedObject.scale.x == this.selectedObject.scale.y ? this.selectedObject.scale.x : null;
 
     if (scale){
@@ -199,11 +195,11 @@ DijonDebugger.prototype.centerPivot = function(){
     this.updateProps(this.selectedObject);
 };
 
-DijonDebugger.prototype.updateProps = function(obj){
-    var i, prop, type, input, id;
-    for (i = 0; i < DijonDebugger.PROPS_LIST.length; i ++){
+p.updateProps = function(obj){
+    var i, prop, type, id, html, $input;
+    for (i = 0; i < Phaser.Plugin.DijonDebugger.PROPS_LIST.length; i ++){
         html = '<li>';
-        prop = DijonDebugger.PROPS_LIST[i];
+        prop = Phaser.Plugin.DijonDebugger.PROPS_LIST[i];
 
         type = prop.type || 'number';
 
@@ -234,7 +230,7 @@ DijonDebugger.prototype.updateProps = function(obj){
     }
 };
 
-DijonDebugger.prototype.onPropChange = function(e){
+p.onPropChange = function(e){
     var keypress = typeof e.which !== 'undefined';
     if (keypress){
         if (!this.currentInput){
@@ -306,7 +302,7 @@ DijonDebugger.prototype.onPropChange = function(e){
     this.updateProps(this.selectedObject);
 };
 
-DijonDebugger.prototype.loadScript = function(url, callback)
+p.loadScript = function(url, callback)
 {
     var self = this;
     var cb = callback;
@@ -330,7 +326,7 @@ DijonDebugger.prototype.loadScript = function(url, callback)
     head.appendChild(script);
 };
 
-DijonDebugger.PROPS_LIST = [
+Phaser.Plugin.DijonDebugger.PROPS_LIST = [
     'x',
     'y',
     'width',
@@ -340,5 +336,3 @@ DijonDebugger.PROPS_LIST = [
     {prop:'scale', xy:true, editAll:true},
     {prop:'anchor', xy:true, editAll:false, center:true, centerFunc:'centerAnchor'}
 ];
-
-module.exports = DijonDebugger;
