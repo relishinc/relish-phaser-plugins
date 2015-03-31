@@ -1,7 +1,7 @@
 {
   "main": "Debugger/DijonDebugger.js",
   "name": "relish-phaser-plugins",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "authors": [
     "Anthony Sapp <anthony@reli.sh>"
   ],

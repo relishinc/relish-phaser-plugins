@@ -139,6 +139,20 @@ Phaser.Plugin.DijonDebugger.prototype.addOption = function(obj){
     }
 };
 
+Phaser.Plugin.DijonDebugger.prototype.getClassName = function(obj) {
+    var name = 'Phaser.Image';
+    if (obj instanceof Phaser.Text){
+        name = 'Phaser.Text';
+    }else if (obj instanceof Phaser.Sprite){
+        name = 'Phaser.Sprite';
+    }else if (obj instanceof Phaser.Group){
+        name = 'Phaser.Group';
+    }else if (obj.instanceof Phaser.Graphics){
+        name = 'Phaser.Graphics';
+    }
+    return name;
+};
+
 Phaser.Plugin.DijonDebugger.prototype.onSelectObject = function(e){
     var name = $(e.currentTarget).val();
     this.$info.find("h3#name").empty();
@@ -148,7 +162,7 @@ Phaser.Plugin.DijonDebugger.prototype.onSelectObject = function(e){
     }
 
     var obj = this.dict[name];
-    this.$info.find("h3#name").html(name + '&nbsp;&nbsp;(' + obj.constructor + ')');
+    this.$info.find("h3#name").html(name + '&nbsp;&nbsp;(' + this.getClassName(obj) + ')');
     this.$props.empty();
 
     this.selectedObject = obj;
