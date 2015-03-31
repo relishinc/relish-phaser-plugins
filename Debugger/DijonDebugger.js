@@ -206,10 +206,8 @@ Phaser.Plugin.DijonDebugger.prototype.centerPivot = function(){
 };
 
 Phaser.Plugin.DijonDebugger.prototype.updateProps = function(obj){
-
-    var i, prop, type, id, html, $input;
+    var i, prop, type, id, $input;
     for (i = 0; i < Phaser.Plugin.DijonDebugger.PROPS_LIST.length; i ++){
-        html = '<li>';
         prop = Phaser.Plugin.DijonDebugger.PROPS_LIST[i];
 
         type = prop.type || 'number';
@@ -236,8 +234,6 @@ Phaser.Plugin.DijonDebugger.prototype.updateProps = function(obj){
             $input = this.$doc.find('#'+id);
             $input.val(obj[prop]);
         }
-        html += '</li>';
-        this.$props.append(html);
     }
 };
 
