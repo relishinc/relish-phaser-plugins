@@ -109,12 +109,14 @@ Phaser.Plugin.DijonDebugger.prototype.populate = function($opts, group){
 };
 
 Phaser.Plugin.DijonDebugger.prototype.getName = function(obj){
-    var defaultName = (obj.parent.name + '_' + obj.parent.getChildIndex(obj)).toString(),
+    var parentName = obj.parent instanceof Phaser.Stage ? 'stage' : obj.parent.name;
+    var childIndex = obj.parent.getChildIndex(obj);
+    var defaultName = (parentName + '_' + childIndex).toString(),
         name;
 
     if (obj instanceof Phaser.Sprite && obj.key && obj.frame){
         name = obj.key + '/' + obj.frame;
-    }else if(obj instanceof Phaser.Image && obj.key){
+    }else if(obj instanceof Phaser.Image && obj.key && typeof obj.key == 'string'){
         name = obj.key;
     }else{
         name = defaultName;
