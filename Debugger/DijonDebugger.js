@@ -147,7 +147,7 @@ Phaser.Plugin.DijonDebugger.prototype.getClassName = function(obj) {
         name = 'Phaser.Sprite';
     }else if (obj instanceof Phaser.Group){
         name = 'Phaser.Group';
-    }else if (obj.instanceof Phaser.Graphics){
+    }else if (obj instanceof Phaser.Graphics){
         name = 'Phaser.Graphics';
     }
     return name;
