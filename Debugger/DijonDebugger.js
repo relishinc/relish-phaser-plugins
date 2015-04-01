@@ -83,6 +83,7 @@ Phaser.Plugin.DijonDebugger.prototype.initialize = function(){
     this.setJQueryVariables();
     this.addToggle();
     this.refresh();
+
     if (this.startOpen){
         this.toggleState();
     }
@@ -91,7 +92,7 @@ Phaser.Plugin.DijonDebugger.prototype.initialize = function(){
 
 Phaser.Plugin.DijonDebugger.prototype.addToggle = function(){
     var self = this;
-    this.state = this.startOpen ? 'in' : 'out';
+    this.state = this.startOpen ? 'out' : 'in';
     this.$bar.on('click', function(){self.toggleState()});
 };
 
@@ -172,6 +173,9 @@ Phaser.Plugin.DijonDebugger.prototype.getFPS = function(){
 
 Phaser.Plugin.DijonDebugger.prototype.refresh = function(){
     this.dict = {};
+    if (!this.$worldopts){
+        return false;
+    }
     this.$worldopts.empty().append('<option value="">Select an item</option>');
     this.$stageopts.empty().append('<option value="">Select an item</option>');
     this.populate(this.$worldopts, this.game.world);
