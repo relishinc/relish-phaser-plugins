@@ -235,14 +235,14 @@ Phaser.Plugin.DijonDebugger.prototype.getClassName = function(obj) {
 
 Phaser.Plugin.DijonDebugger.prototype.onSelectObject = function(e){
     var name = $(e.currentTarget).val();
-    this.$info.find("h3#name").empty();
+    this.$info.find("#name").empty();
 
     if (name === ''){
         return false;
     }
 
     var obj = this.dict[name];
-    this.$info.find("h3#name").html(name + '&nbsp;&nbsp;(' + this.getClassName(obj) + ')');
+    this.$info.find("#name").html(name + '&nbsp;&nbsp;(' + this.getClassName(obj) + ')');
     this.$props.empty();
 
     this.selectedObject = obj;
