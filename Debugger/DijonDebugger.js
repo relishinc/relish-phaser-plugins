@@ -1,13 +1,20 @@
 Phaser.Plugin.DijonDebugger = function (game, parent) {
     Phaser.Plugin.call(this, game, parent);
-    this.game.time.advancedTiming = true;
     this.buildInterface();
-
 };
 
 //  Extends the Phaser.Plugin template, setting up values we need
 Phaser.Plugin.DijonDebugger.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.DijonDebugger.prototype.constructor = Phaser.Plugin.DijonDebugger;
+
+Phaser.Plugin.DijonDebugger.prototype.init = function(params){
+    this.showFPS = params.showFPS !== false;
+    this.startOpen = params.closed !== true;
+
+    if (this.showFPS){
+        this.game.time.advancedTiming = true;
+    }
+};
 
 Phaser.Plugin.DijonDebugger.prototype.buildInterface = function(){
     this.getPath();
@@ -17,8 +24,21 @@ Phaser.Plugin.DijonDebugger.prototype.buildInterface = function(){
 
 Phaser.Plugin.DijonDebugger.prototype.getPath = function(){
     this.scripts = document.getElementsByTagName("script");
-    this.script = this.scripts[this.scripts.length-1];
-    this.path = this.script.src.replace(/\/script\.js$/, '/');
+    this.script = null;
+
+    var i = this.scripts.length-1,
+        script = null,
+        path = null;
+
+    while (this.script === null){
+        script = this.scripts[i];
+        path = script.src.replace(/\/script\.js$/, '/');
+        if (path.indexOf('DijonDebugger.js') >= 0){
+            this.path = path;
+            this.script = script;
+        }
+        i--;
+    }
     this.path = this.path.replace('DijonDebugger.js', '');
 };
 
@@ -27,8 +47,9 @@ Phaser.Plugin.DijonDebugger.prototype.loadScripts = function(){
 };
 
 Phaser.Plugin.DijonDebugger.prototype.loadStyles = function(){
-    this.loadStyle(this.path + 'dijon-debugger.css');
     this.loadStyle(this.path + 'bootstrap.min.css');
+    this.loadStyle(this.path + 'dijon-debugger.css');
+
 };
 
 Phaser.Plugin.DijonDebugger.prototype.onJQueryLoaded = function(){
@@ -50,14 +71,17 @@ Phaser.Plugin.DijonDebugger.prototype.createDebugWindow = function(){
 Phaser.Plugin.DijonDebugger.prototype.addHTML = function(){
     var self = this;
     this.$div.load(this.path + 'dijon-debugger.html', function(){self.initialize()});
-    $('body').append('<div id="dijon-debugger-toggle-tab">D</div>');
+    $('body').append('<div id="dijon-debugger-toggle-tab" title="Dijon Debug Panel">D</div>');
 };
 
 Phaser.Plugin.DijonDebugger.prototype.initialize = function(){
     this.setJQueryVariables();
     this.addToggle();
     this.refresh();
-    this.toggleState();
+    if (this.startOpen){
+        this.toggleState();
+    }
+
 };
 
 Phaser.Plugin.DijonDebugger.prototype.addToggle = function(){
@@ -97,7 +121,11 @@ Phaser.Plugin.DijonDebugger.prototype.setJQueryVariables = function(){
     this.$stageopts.on('change', function(e){self.onSelectObject(e);});
 
     this.$refreshbutton.on('click', function(){self.refresh();});
-    this.$fps = $('#dijon-debugger-fps');
+
+    if (this.showFPS){
+        this.$fps = $('#dijon-debugger-fps');
+    }
+
 };
 
 Phaser.Plugin.DijonDebugger.prototype.getIncrement = function(){
@@ -245,7 +273,7 @@ Phaser.Plugin.DijonDebugger.prototype.addProps = function(props, obj){
                     html += '<div class="prop_input col-xs-4"><label>'+prop.prop+':&nbsp;</label><input class="form-control" id="'+prop.prop+'" type="text" value="'+(obj[prop.prop].x === obj[prop.prop].y ? obj[prop.prop].x : '')+'" data-val="'+(obj[prop.prop].x === obj[prop.prop].y ? obj[prop.prop].x : '')+'" data-type="'+type+'" data-prop="'+prop.prop+'" data-multiple="true" data-bound="#'+prop.prop+'_x,#'+prop.prop+'_y"></div>';
                 }
                 if (prop.center && typeof prop.centerFunc !== 'undefined'){
-                    html += '<div class="prop_input col-xs-4 btn-container"><button class="btn btn-default btn-sm" onclick="window.DijonDebugger.'+prop.centerFunc+'()" class="center_button">CENTER '+prop.prop.toUpperCase()+'</button></div>';
+                    html += '<div class="prop_input col-xs-4 btn-container"><button class="btn btn-default btn-sm" onclick="window.DijonDebugger.'+prop.centerFunc+'()" class="center_button">CENTER</button></div>';
                 }
             }
         }else{
