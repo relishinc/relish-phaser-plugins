@@ -91,7 +91,7 @@ Phaser.Plugin.DijonDebugger.prototype.initialize = function(){
 
 Phaser.Plugin.DijonDebugger.prototype.addToggle = function(){
     var self = this;
-    this.state = 'out';
+    this.state = this.startOpen ? 'in' : 'out';
     this.$bar.on('click', function(){self.toggleState()});
 };
 
