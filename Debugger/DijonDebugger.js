@@ -8,6 +8,11 @@ Phaser.Plugin.DijonDebugger.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.DijonDebugger.prototype.constructor = Phaser.Plugin.DijonDebugger;
 
 Phaser.Plugin.DijonDebugger.prototype.init = function(params){
+    if (typeof params === 'undefined'){
+        this.showFPS = this.startOpen = true;
+        return;
+    }
+
     this.showFPS = params.showFPS !== false;
     this.startOpen = params.closed !== true;
 
