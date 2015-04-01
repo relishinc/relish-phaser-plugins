@@ -1,10 +1,10 @@
 #dijon-debugger{
     font-family: Arial, Helvetica, sans-serif;
     position:fixed;
-    width:25%;
+    width:420px;
     height:100%;
     top:0;
-    left:-25%;
+    left:-420px;
     margin-bottom:0;
     overflow:scroll;
     border-right:1px solid #9a9100;
@@ -21,6 +21,7 @@
     text-transform: uppercase;
     background:#d4c800;
     padding:12px;
+    padding-left:15px;
     font-weight:bold;
     border-radius: 0 !important;
     border-width:0;
@@ -68,8 +69,7 @@ li{float:left; width:100%; padding-bottom:5px}
   height: 100px;
   background: #d4c800;
   cursor: pointer;
-  top: 50%;
-  margin-top: -50px;
+  top: 10px;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   padding-top: 29px;
@@ -79,7 +79,7 @@ li{float:left; width:100%; padding-bottom:5px}
 }
 
 #dijon-debugger-toggle-tab.in{
-    left: 25%;
+    left: 420px;
 }
 
 #dijon-debugger-fps{
