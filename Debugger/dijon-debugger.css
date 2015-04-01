@@ -9,6 +9,7 @@
     overflow:scroll;
     border-right:1px solid #9a9100;
     box-shadow: 0px 0px 8px #aaa;
+    background:#fff;
 }
 
 #dijon-debugger.in{
