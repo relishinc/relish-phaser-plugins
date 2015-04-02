@@ -309,7 +309,9 @@ Phaser.Plugin.DijonDebugger.prototype.addProps = function(props, obj){
                 }
             }
         }else{
-            html += '<div class="prop_input col-xs-4"><label>'+prop+':&nbsp;</label><input class="form-control" id="'+prop+'" type="text" value="'+obj[prop]+'" data-val="'+obj[prop]+'" data-type="'+type+'" data-prop="'+prop+'"></div>';
+            if (typeof obj[prop] !== 'undefined'){
+                html += '<div class="prop_input col-xs-4"><label>'+prop+':&nbsp;</label><input class="form-control" id="'+prop+'" type="text" value="'+obj[prop]+'" data-val="'+obj[prop]+'" data-type="'+type+'" data-prop="'+prop+'"></div>';
+            }
         }
     }
 
