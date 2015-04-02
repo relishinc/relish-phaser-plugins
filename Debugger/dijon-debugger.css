@@ -103,6 +103,7 @@
 #dijon-debugger #wrap{height:100%;}
 
 #dijon-debugger #refresh{font-size:18px; margin-top:30px;}
+#dijon-debugger #refresh i{margin-left:10px;}
 
 #dijon-debugger .section-title{
     margin-top: 20px;
@@ -125,8 +126,12 @@
   padding-top: 29px;
   font-size: 24px;
   color:#ecec89;
-  padding-left: 11px;
+  padding-left: 7px;
   z-index:999;
+}
+
+#dijon-debugger-toggle-tab:hover i{
+  color:white;
 }
 
 #dijon-debugger-toggle-tab.in{
@@ -143,6 +148,6 @@
   right: 0;
   text-align: center;
   padding-top: 15px;
-  color: #ccc;
+  color: #ecec89;
   font-size:14px;
 }

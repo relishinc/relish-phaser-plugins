@@ -48,18 +48,18 @@ Phaser.Plugin.DijonDebugger.prototype.getPath = function(){
 };
 
 Phaser.Plugin.DijonDebugger.prototype.loadScripts = function(){
-    this.loadScript(this.path + 'jquery.min.js', 'onJQueryLoaded');
+    this.loadScript(this.path + 'js/jquery.min.js', 'onJQueryLoaded');
 };
 
 Phaser.Plugin.DijonDebugger.prototype.loadStyles = function(){
-    this.loadStyle(this.path + 'bootstrap.min.css');
+    this.loadStyle(this.path + 'css/bootstrap.min.css');
+    this.loadStyle(this.path + 'css/font-awesome.min.css');
     this.loadStyle(this.path + 'dijon-debugger.css');
-
 };
 
 Phaser.Plugin.DijonDebugger.prototype.onJQueryLoaded = function(){
     $ = window.$ = window.jQuery;
-    this.loadScript(this.path + 'bootstrap.min.js', 'onJSLoaded');
+    this.loadScript(this.path + 'js/bootstrap.min.js', 'onJSLoaded');
 };
 
 Phaser.Plugin.DijonDebugger.prototype.onJSLoaded = function(){
@@ -76,7 +76,7 @@ Phaser.Plugin.DijonDebugger.prototype.createDebugWindow = function(){
 Phaser.Plugin.DijonDebugger.prototype.addHTML = function(){
     var self = this;
     this.$div.load(this.path + 'dijon-debugger.html', function(){self.initialize()});
-    $('body').append('<div id="dijon-debugger-toggle-tab" title="Dijon Debug Panel">D</div>');
+    $('body').append('<div id="dijon-debugger-toggle-tab" title="Dijon Debug Panel"><i class="fa fa-cogs"></i></div>');
 };
 
 Phaser.Plugin.DijonDebugger.prototype.initialize = function(){
@@ -176,10 +176,24 @@ Phaser.Plugin.DijonDebugger.prototype.refresh = function(){
     if (!this.$worldopts){
         return false;
     }
+
+    this.$worldopts.data('index', this.$worldopts.prop('selectedIndex'));
+    this.$stageopts.data('index', this.$stageopts.prop('selectedIndex'));
+
+
     this.$worldopts.empty().append('<option value="">Select an item</option>');
     this.$stageopts.empty().append('<option value="">Select an item</option>');
+
     this.populate(this.$worldopts, this.game.world);
     this.populate(this.$stageopts, this.game.stage);
+
+    if (this.$stageopts.data('index') > 0){
+        this.$stageopts.prop('selectedIndex', this.$stageopts.data('index'));
+    }
+
+    if (this.$worldopts.data('index') > 0){
+        this.$worldopts.prop('selectedIndex', this.$worldopts.data('index'));
+    }
 };
 
 Phaser.Plugin.DijonDebugger.prototype.populate = function($opts, group){
@@ -234,7 +248,16 @@ Phaser.Plugin.DijonDebugger.prototype.getClassName = function(obj) {
 };
 
 Phaser.Plugin.DijonDebugger.prototype.onSelectObject = function(e){
-    var name = $(e.currentTarget).val();
+    var $select = $(e.currentTarget);
+    //$("option:selected").removeAttr("selected");
+
+    if ($select.attr('id') == 'world-select'){
+        this.$stageopts.find("option:selected").removeAttr("selected");
+    }else{
+        this.$worldopts.find("option:selected").removeAttr("selected");
+    }
+
+    var name = $select.val();
     this.$info.find("#name").empty();
 
     if (name === ''){
