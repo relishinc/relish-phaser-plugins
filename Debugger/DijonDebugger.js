@@ -75,6 +75,7 @@ Phaser.Plugin.DijonDebugger.prototype.createDebugWindow = function(){
 
 Phaser.Plugin.DijonDebugger.prototype.addHTML = function(){
     var self = this;
+
     this.$div.load(this.path + 'dijon-debugger.html', function(){self.initialize()});
     $('body').append('<div id="dijon-debugger-toggle-tab" title="Dijon Debug Panel"><i class="fa fa-cogs"></i></div>');
 };
@@ -92,12 +93,14 @@ Phaser.Plugin.DijonDebugger.prototype.initialize = function(){
 
 Phaser.Plugin.DijonDebugger.prototype.addToggle = function(){
     var self = this;
+
     this.state = 'out';
     this.$bar.on('click', function(){self.toggleState()});
 };
 
 Phaser.Plugin.DijonDebugger.prototype.toggleState = function(){
     this.state = this.state == 'in' ? 'out' : 'in';
+
     if (this.state == 'out'){
         this.$div.removeClass('in');
         this.$bar.removeClass('in');
@@ -119,9 +122,9 @@ Phaser.Plugin.DijonDebugger.prototype.setJQueryVariables = function(){
     this.$props = this.$div.find('#props');
     this.$refreshbutton = this.$div.find('#refresh');
 
-    this.$props.on('change keydown', 'input,textarea', function(e){self.onPropChange(e);});
-    this.$props.on('focus', 'input,textarea', function(e){self.onInputFocus(e);});
-    this.$props.on('focusout', 'input,textarea', function(e){self.onInputFocusOut(e);});
+    this.$props.on('change keydown', 'input,textarea,checkbox', function(e){self.onPropChange(e);});
+    this.$props.on('focus', 'input,textarea,checkbox', function(e){self.onInputFocus(e);});
+    this.$props.on('focusout', 'input,textarea,checkbox', function(e){self.onInputFocusOut(e);});
 
     this.$worldopts.on('change', function(e){self.onSelectObject(e);});
     this.$stageopts.on('change', function(e){self.onSelectObject(e);});
@@ -139,6 +142,7 @@ Phaser.Plugin.DijonDebugger.prototype.getIncrement = function(){
         valArr,
         len = 0,
         str;
+
     if (val.indexOf ('.') < 0){
         return 1;
     }else{
@@ -173,6 +177,7 @@ Phaser.Plugin.DijonDebugger.prototype.getFPS = function(){
 
 Phaser.Plugin.DijonDebugger.prototype.refresh = function(){
     this.dict = {};
+
     if (!this.$worldopts){
         return false;
     }
@@ -203,9 +208,9 @@ Phaser.Plugin.DijonDebugger.prototype.populate = function($opts, group){
 };
 
 Phaser.Plugin.DijonDebugger.prototype.getName = function(obj){
-    var parentName = obj.parent instanceof Phaser.Stage ? 'stage' : obj.parent.name;
-    var childIndex = obj.parent.getChildIndex(obj);
-    var defaultName = (parentName + '_' + childIndex).toString(),
+    var parentName = obj.parent instanceof Phaser.Stage ? 'stage' : obj.parent.name,
+        childIndex = obj.parent.getChildIndex(obj),
+        defaultName = (parentName + '_' + childIndex).toString(),
         name;
 
     if (obj instanceof Phaser.Sprite && obj.key && obj.frame){
@@ -220,6 +225,7 @@ Phaser.Plugin.DijonDebugger.prototype.getName = function(obj){
 
 Phaser.Plugin.DijonDebugger.prototype.addOption = function(obj){
     var name = obj.name || this.getName(obj);
+
     if (name === '__world') return false;
 
     this.dict[name] = obj;
@@ -235,6 +241,7 @@ Phaser.Plugin.DijonDebugger.prototype.addOption = function(obj){
 
 Phaser.Plugin.DijonDebugger.prototype.getClassName = function(obj) {
     var name = 'Phaser.Image';
+
     if (obj instanceof Phaser.Text){
         name = 'Phaser.Text';
     }else if (obj instanceof Phaser.Sprite){
@@ -274,7 +281,11 @@ Phaser.Plugin.DijonDebugger.prototype.onSelectObject = function(e){
 };
 
 Phaser.Plugin.DijonDebugger.prototype.showProps = function(obj){
-    var i, section, html = '', propsHTML;
+    var i,
+        section,
+        html = '',
+        propsHTML;
+
     for (i = 0; i < Phaser.Plugin.DijonDebugger.PROPS_LIST.length; i ++){
         section = Phaser.Plugin.DijonDebugger.PROPS_LIST[i];
         propsHTML = this.addProps(section.props, obj);
@@ -291,12 +302,13 @@ Phaser.Plugin.DijonDebugger.prototype.addProps = function(props, obj){
     var html = '',
         type,
         i,
-        prop;
+        prop,
+        checked;
 
     for (i = 0; i < props.length; i ++){
         prop = props[i];
-        type = prop.type || 'number',
-        cols = prop.cols || 4,
+        type = prop.type || 'number';
+        cols = prop.cols || 4;
         inputType = prop.input || 'text';
 
         if(typeof prop === 'object'){
@@ -311,7 +323,10 @@ Phaser.Plugin.DijonDebugger.prototype.addProps = function(props, obj){
                 }
             }else if(typeof obj[prop.prop] !== 'undefined'){
                 if (inputType == 'textarea'){
-                    html += '<div class="prop_input col-xs-'+cols+'"><label>'+prop.prop+'&nbsp;</label><textarea class="form-control" id="'+prop.prop+'" type="'+inputType+'" value="'+obj[prop.prop]+'" data-data-type="'+type+'" data-prop="'+prop.prop+'">'+obj[prop.prop]+'</textarea></div>';
+                    html += '<div class="prop_input col-xs-'+cols+'"><label>'+prop.prop+'&nbsp;</label><textarea class="form-control" id="'+prop.prop+'" type="'+inputType+'" value="'+obj[prop.prop]+'" data-type="'+type+'" data-prop="'+prop.prop+'">'+obj[prop.prop]+'</textarea></div>';
+                }else if(inputType == 'checkbox'){
+                    checked = obj[prop.prop] ? 'checked="on"' : '';
+                    html += '<div class="prop_input col-xs-'+cols+'"><label>'+prop.prop+'&nbsp;</label><input class="checkbox" id="'+prop.prop+'" type="'+inputType+'" '+checked+' data-type="'+type+'" data-prop="'+prop.prop+'"></div>';
                 }else{
                    html += '<div class="prop_input col-xs-'+cols+'"><label>'+prop.prop+'&nbsp;</label><input class="form-control" id="'+prop.prop+'" type="'+inputType+'" value="'+obj[prop.prop]+'" data-val="'+obj[prop.prop]+'" data-type="'+type+'" data-prop="'+prop.prop+'"></div>';
                 }
@@ -349,7 +364,15 @@ Phaser.Plugin.DijonDebugger.prototype.centerPivot = function(){
 };
 
 Phaser.Plugin.DijonDebugger.prototype.updateProps = function(obj){
-    var i, j, prop, props, section, type, id, $input;
+    var i,
+        j,
+        prop,
+        props,
+        section,
+        type,
+        id,
+        $input;
+
     for (i = 0; i < Phaser.Plugin.DijonDebugger.PROPS_LIST.length; i ++){
         section = Phaser.Plugin.DijonDebugger.PROPS_LIST[i];
         props = section.props;
@@ -373,7 +396,10 @@ Phaser.Plugin.DijonDebugger.prototype.updateProps = function(obj){
                         $input = this.$div.find('#'+id);
                         $input.val(obj[prop.prop].x === obj[prop.prop].y ? obj[prop.prop].x : '');
                     }
-
+                }else if (typeof obj[prop.prop] !== 'undefined'){
+                    id = prop.prop;
+                    $input = this.$div.find('#'+id);
+                    $input.val(obj[prop.prop]);
                 }
             }else{
                 id = prop;
@@ -387,17 +413,27 @@ Phaser.Plugin.DijonDebugger.prototype.updateProps = function(obj){
 Phaser.Plugin.DijonDebugger.prototype.onPropChange = function(e){
     var keypress = typeof e.which !== 'undefined',
         $input = keypress ? this.currentInput : $(e.currentTarget),
+        type    = $input.data('type'),
         value   = $input.val(),
         currentVal = $input.data('val'),
-        type    = $input.data('type'),
         propStr = $input.data('prop'),
         multiple = $input.data('multiple') == "true" || $input.data('multiple') === true,
         boundInputStr = $input.data('bound'),
         boundInputs,
         $bInput,
         propArr,
-        i = 0;
+        i = 0,
+        invalid = false;
 
+    if (type == 'number'){
+        if (value.indexOf('.')>=0){
+            value = parseFloat(value);
+        }else{
+            value = parseInt(value);
+        }
+    }else if(type == 'boolean'){
+        value = $input.prop('checked');
+    }
 
     if (keypress){
         if (type == 'number'){
@@ -407,11 +443,11 @@ Phaser.Plugin.DijonDebugger.prototype.onPropChange = function(e){
             switch (e.which){
                 case 38:
                     //up
-                    this.currentInput.val(parseFloat(this.currentInput.val()) + this.getIncrement());
+                    value += this.getIncrement();
                     break;
                 case 40:
                     //down
-                    this.currentInput.val(parseFloat(this.currentInput.val()) - this.getIncrement());
+                    value -= this.getIncrement();
                 break;
                 default:
                     return false;
@@ -422,16 +458,6 @@ Phaser.Plugin.DijonDebugger.prototype.onPropChange = function(e){
         }
     }
 
-    if (type == 'number'){
-        if (value.indexOf('.')>=0){
-            value = parseFloat(value);
-        }else{
-            value = parseInt(value);
-        }
-    }
-
-    var invalid = false;
-
     if (boundInputStr !== "" && typeof boundInputStr !== 'undefined'){
         if (boundInputStr.indexOf(',') > 0){
             boundInputs = boundInputStr.split(',');
@@ -439,7 +465,6 @@ Phaser.Plugin.DijonDebugger.prototype.onPropChange = function(e){
             boundInputs = [boundInputStr];
         }
     }
-
     switch(type){
         case 'number':
             invalid = isNaN(value);
@@ -470,21 +495,20 @@ Phaser.Plugin.DijonDebugger.prototype.onPropChange = function(e){
     }
 
     $input.data('val', value);
+    $input.val(value);
 
     this.updateProps(this.selectedObject);
 };
 
 Phaser.Plugin.DijonDebugger.prototype.loadScript = function(url, callback){
-    var self = this;
-    var cb = callback;
-    // Adding the script tag to the head as suggested before
-    var head = document.getElementsByTagName('head')[0];
-    var script = document.createElement('script');
+    var self = this,
+        cb = callback,
+        head = document.getElementsByTagName('head')[0],
+        script = document.createElement('script');
+
     script.type = 'text/javascript';
     script.src = url;
 
-    // Then bind the event to the callback function.
-    // There are several events for cross browser compatibility.
     script.onreadystatechange = function(){
         self[cb]();
     };
@@ -493,13 +517,13 @@ Phaser.Plugin.DijonDebugger.prototype.loadScript = function(url, callback){
         self[cb]();
     };
 
-    // Fire the loading
     head.appendChild(script);
 };
 
 Phaser.Plugin.DijonDebugger.prototype.loadStyle = function(url){
-    var head  = document.getElementsByTagName('head')[0];
-    var link  = document.createElement('link');
+    var head  = document.getElementsByTagName('head')[0],
+        link  = document.createElement('link');
+
     link.rel  = 'stylesheet';
     link.type = 'text/css';
     link.href = url;
@@ -514,5 +538,6 @@ Phaser.Plugin.DijonDebugger.PROPS_LIST = [
     {title:'Scale', props:[{prop:'scale', xy:true, editAll:true}]},
     {title:'Pivot', props:[{prop:'pivot', xy:true, editAll:false, center:true, centerFunc:'centerPivot'}]},
     {title:'Anchor', props:[{prop:'anchor', xy:true, editAll:false, center:true, centerFunc:'centerAnchor'}]},
+    {title:'Visibility', props:['alpha', {prop:'visible', type:'boolean', input:'checkbox'}]},
     {title:'Text', props:[{prop:'text', type:'string', input:'textarea', cols:12}, 'lineSpacing', 'fontSize', {prop:'align', type:'string'}]}
 ];
