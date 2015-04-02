@@ -119,9 +119,9 @@ Phaser.Plugin.DijonDebugger.prototype.setJQueryVariables = function(){
     this.$props = this.$div.find('#props');
     this.$refreshbutton = this.$div.find('#refresh');
 
-    this.$props.on('change keydown', 'input', function(e){self.onPropChange(e);});
-    this.$props.on('focus', 'input', function(e){self.onInputFocus(e);});
-    this.$props.on('focusout', 'input', function(e){self.onInputFocusOut(e);});
+    this.$props.on('change keydown', 'input,textarea', function(e){self.onPropChange(e);});
+    this.$props.on('focus', 'input,textarea', function(e){self.onInputFocus(e);});
+    this.$props.on('focusout', 'input,textarea', function(e){self.onInputFocusOut(e);});
 
     this.$worldopts.on('change', function(e){self.onSelectObject(e);});
     this.$stageopts.on('change', function(e){self.onSelectObject(e);});
@@ -295,22 +295,31 @@ Phaser.Plugin.DijonDebugger.prototype.addProps = function(props, obj){
 
     for (i = 0; i < props.length; i ++){
         prop = props[i];
-        type = prop.type || 'number'
+        type = prop.type || 'number',
+        cols = prop.cols || 4,
+        inputType = prop.input || 'text';
 
         if(typeof prop === 'object'){
             if (prop.xy && typeof obj[prop.prop] !== 'undefined' && typeof obj[prop.prop].x !== 'undefined' && typeof obj[prop.prop].y !== 'undefined'){
-                html += '<div class="prop_input col-xs-4"><label>'+prop.prop+' x:&nbsp;</label><input class="form-control" id="'+prop.prop+'_x" type="text" value="'+obj[prop.prop].x+'" data-val="'+obj[prop.prop].x+'" data-type="'+type+'" data-prop="'+prop.prop+'.x"></div>';
-                html += '<div class="prop_input col-xs-4"><label>'+prop.prop+' y:&nbsp;</label><input class="form-control" id="'+prop.prop+'_y" type="text" value="'+obj[prop.prop].y+'" data-val="'+obj[prop.prop].y+'" data-type="'+type+'" data-prop="'+prop.prop+'.y"></div>';
+                html += '<div class="prop_input col-xs-'+cols+'"><label>'+prop.prop+'.x:&nbsp;</label><input class="form-control" id="'+prop.prop+'_x" type="'+inputType+'" value="'+obj[prop.prop].x+'" data-val="'+obj[prop.prop].x+'" data-type="'+type+'" data-prop="'+prop.prop+'.x"></div>';
+                html += '<div class="prop_input col-xs-'+cols+'"><label>'+prop.prop+'.y:&nbsp;</label><input class="form-control" id="'+prop.prop+'_y" type="'+inputType+'" value="'+obj[prop.prop].y+'" data-val="'+obj[prop.prop].y+'" data-type="'+type+'" data-prop="'+prop.prop+'.y"></div>';
                 if (prop.editAll){
-                    html += '<div class="prop_input col-xs-4"><label>'+prop.prop+':&nbsp;</label><input class="form-control" id="'+prop.prop+'" type="text" value="'+(obj[prop.prop].x === obj[prop.prop].y ? obj[prop.prop].x : '')+'" data-val="'+(obj[prop.prop].x === obj[prop.prop].y ? obj[prop.prop].x : '')+'" data-type="'+type+'" data-prop="'+prop.prop+'" data-multiple="true" data-bound="#'+prop.prop+'_x,#'+prop.prop+'_y"></div>';
+                    html += '<div class="prop_input col-xs-'+cols+'"><label>'+prop.prop+':&nbsp;</label><input class="form-control" id="'+prop.prop+'" type="'+inputType+'" value="'+(obj[prop.prop].x === obj[prop.prop].y ? obj[prop.prop].x : '')+'" data-val="'+(obj[prop.prop].x === obj[prop.prop].y ? obj[prop.prop].x : '')+'" data-type="'+type+'" data-prop="'+prop.prop+'" data-multiple="true" data-bound="#'+prop.prop+'_x,#'+prop.prop+'_y"></div>';
                 }
                 if (prop.center && typeof prop.centerFunc !== 'undefined'){
-                    html += '<div class="prop_input col-xs-4 btn-container"><button class="btn btn-default btn-sm" onclick="window.DijonDebugger.'+prop.centerFunc+'()" class="center_button">CENTER</button></div>';
+                    html += '<div class="prop_input col-xs-'+cols+' btn-container"><button class="btn btn-default btn-sm" onclick="window.DijonDebugger.'+prop.centerFunc+'()" class="center_button">CENTER</button></div>';
                 }
+            }else if(typeof obj[prop.prop] !== 'undefined'){
+                if (inputType == 'textarea'){
+                    html += '<div class="prop_input col-xs-'+cols+'"><label>'+prop.prop+'&nbsp;</label><textarea class="form-control" id="'+prop.prop+'" type="'+inputType+'" value="'+obj[prop.prop]+'" data-data-type="'+type+'" data-prop="'+prop.prop+'">'+obj[prop.prop]+'</textarea></div>';
+                }else{
+                   html += '<div class="prop_input col-xs-'+cols+'"><label>'+prop.prop+'&nbsp;</label><input class="form-control" id="'+prop.prop+'" type="'+inputType+'" value="'+obj[prop.prop]+'" data-val="'+obj[prop.prop]+'" data-type="'+type+'" data-prop="'+prop.prop+'"></div>';
+                }
+
             }
         }else{
             if (typeof obj[prop] !== 'undefined'){
-                html += '<div class="prop_input col-xs-4"><label>'+prop+':&nbsp;</label><input class="form-control" id="'+prop+'" type="text" value="'+obj[prop]+'" data-val="'+obj[prop]+'" data-type="'+type+'" data-prop="'+prop+'"></div>';
+                html += '<div class="prop_input col-xs-'+cols+'"><label>'+prop+':&nbsp;</label><input class="form-control" id="'+prop+'" type="'+inputType+'" value="'+obj[prop]+'" data-val="'+obj[prop]+'" data-type="'+type+'" data-prop="'+prop+'"></div>';
             }
         }
     }
@@ -376,27 +385,9 @@ Phaser.Plugin.DijonDebugger.prototype.updateProps = function(obj){
 };
 
 Phaser.Plugin.DijonDebugger.prototype.onPropChange = function(e){
-    var keypress = typeof e.which !== 'undefined';
-    if (keypress){
-        if (!this.currentInput){
-            return false;
-        }
-        switch (e.which){
-            case 38:
-                //up
-                this.currentInput.val(parseFloat(this.currentInput.val()) + this.getIncrement());
-                break;
-            case 40:
-                //down
-                this.currentInput.val(parseFloat(this.currentInput.val()) - this.getIncrement());
-            break;
-            default:
-                return false;
-        }
-    }
-
-    var $input = keypress ? this.currentInput : $(e.currentTarget);
-    var value   = parseFloat($input.val()),
+    var keypress = typeof e.which !== 'undefined',
+        $input = keypress ? this.currentInput : $(e.currentTarget),
+        value   = $input.val(),
         currentVal = $input.data('val'),
         type    = $input.data('type'),
         propStr = $input.data('prop'),
@@ -406,6 +397,38 @@ Phaser.Plugin.DijonDebugger.prototype.onPropChange = function(e){
         $bInput,
         propArr,
         i = 0;
+
+
+    if (keypress){
+        if (type == 'number'){
+            if (!this.currentInput){
+                return false;
+            }
+            switch (e.which){
+                case 38:
+                    //up
+                    this.currentInput.val(parseFloat(this.currentInput.val()) + this.getIncrement());
+                    break;
+                case 40:
+                    //down
+                    this.currentInput.val(parseFloat(this.currentInput.val()) - this.getIncrement());
+                break;
+                default:
+                    return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    if (type == 'number'){
+        if (value.indexOf('.')>=0){
+            value = parseFloat(value);
+        }else{
+            value = parseInt(value);
+        }
+    }
 
     var invalid = false;
 
@@ -420,6 +443,9 @@ Phaser.Plugin.DijonDebugger.prototype.onPropChange = function(e){
     switch(type){
         case 'number':
             invalid = isNaN(value);
+        break;
+        case 'text':
+            invalid = value === '';
         break;
     }
 
@@ -488,5 +514,5 @@ Phaser.Plugin.DijonDebugger.PROPS_LIST = [
     {title:'Scale', props:[{prop:'scale', xy:true, editAll:true}]},
     {title:'Pivot', props:[{prop:'pivot', xy:true, editAll:false, center:true, centerFunc:'centerPivot'}]},
     {title:'Anchor', props:[{prop:'anchor', xy:true, editAll:false, center:true, centerFunc:'centerAnchor'}]},
-    {title:'Text', props:[{prop:'text', type:'string'}, 'lineSpacing', 'fontSize']}
+    {title:'Text', props:[{prop:'text', type:'string', input:'textarea', cols:12}, 'lineSpacing', 'fontSize', {prop:'align', type:'string'}]}
 ];

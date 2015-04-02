@@ -105,8 +105,12 @@
 #dijon-debugger #refresh i{margin-left:10px;}
 
 #dijon-debugger .section-title{
-    margin-top: 20px;
+    margin-top: 5px;
     margin-bottom: 5px;
+}
+
+#dijon-debugger input[type=text], #dijon-debugger textarea{
+  margin-bottom:15px;
 }
 
 #dijon-debugger .btn-container{
