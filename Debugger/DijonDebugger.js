@@ -226,7 +226,7 @@ Phaser.Plugin.DijonDebugger.prototype.addOption = function(obj){
 
     this.optsHTML += '<option value="'+name+'" onclick="window.DijonDebugger.selectObject()">'+name+'</option>';
 
-    if (obj instanceof Phaser.Group && obj.children.length > 0){
+    if (obj.children.length > 0){
         this.optsHTML += '<optgroup label="'+name+' children">';
         _.each(obj.children, this.addOption, this);
         this.optsHTML += '</optgroup>';
