@@ -485,5 +485,6 @@ Phaser.Plugin.DijonDebugger.PROPS_LIST = [
     {title:'Rotation / Angle', props:['rotation', 'angle']},
     {title:'Scale', props:[{prop:'scale', xy:true, editAll:true}]},
     {title:'Pivot', props:[{prop:'pivot', xy:true, editAll:false, center:true, centerFunc:'centerPivot'}]},
-    {title:'Anchor', props:[{prop:'anchor', xy:true, editAll:false, center:true, centerFunc:'centerAnchor'}]}
+    {title:'Anchor', props:[{prop:'anchor', xy:true, editAll:false, center:true, centerFunc:'centerAnchor'}]},
+    {title:'Text', props:[{prop:'text', type:'string'}, 'lineSpacing', 'fontSize']}
 ];
