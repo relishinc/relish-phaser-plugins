@@ -15,6 +15,7 @@ Phaser.Plugin.DijonDebugger.prototype.init = function(params){
 
     this.showFPS = params.showFPS !== false;
     this.startOpen = params.closed !== true;
+    this.showSpriteBounds = params.showSpriteBounds !== false;
 
     if (this.showFPS){
         this.game.time.advancedTiming = true;
@@ -189,8 +190,9 @@ Phaser.Plugin.DijonDebugger.prototype.render = function () {
             hitArea.y = pos.y;
 
             this.game.debug.geom(hitArea);
-        }else{
-           //this.game.debug.spriteBounds(this.selectedObject);
+        }else if (this.showSpriteBounds){
+        }else if (this.showSpriteBounds){
+           this.game.debug.spriteBounds(this.selectedObject);
         }
     }
 };
