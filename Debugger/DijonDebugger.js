@@ -241,8 +241,8 @@ Phaser.Plugin.DijonDebugger.prototype.getName = function(obj){
         defaultName = (parentName + '_' + childIndex).toString(),
         name;
 
-    if (obj instanceof Phaser.Sprite && obj.key && obj.frame){
-        name = obj.key + '/' + obj.frame;
+    if ((obj instanceof Phaser.Sprite || obj instanceof Phaser.Image) && obj.key && obj.frame){
+        name = obj.key + '/' + obj.frameName;
     }else if(obj instanceof Phaser.Image && obj.key && typeof obj.key == 'string'){
         name = obj.key;
     }else{
