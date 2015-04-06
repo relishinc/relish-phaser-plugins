@@ -171,6 +171,30 @@ Phaser.Plugin.DijonDebugger.prototype.update = function () {
     this.$fps.find('span').html(this.getFPS() + '&nbsp;FPS');
 };
 
+Phaser.Plugin.DijonDebugger.prototype.render = function () {
+    var hitArea,
+        pos,
+        parent = this.selectedObject;
+
+    if (this.selectedObject && this.selectedObject.renderable){
+        if (this.selectedObject.hitArea){
+            hitArea = this.selectedObject.hitArea.clone();
+            pos = new Phaser.Point(hitArea.x, hitArea.y);
+            while (parent != null){
+                pos.x += parent.x - parent.pivot.x;
+                pos.y += parent.y - parent.pivot.y;
+                parent = parent.parent;
+            }
+            hitArea.x = pos.x;
+            hitArea.y = pos.y;
+
+            this.game.debug.geom(hitArea);
+        }else{
+           //this.game.debug.spriteBounds(this.selectedObject);
+        }
+    }
+};
+
 Phaser.Plugin.DijonDebugger.prototype.getFPS = function(){
     return this.game.time.fps.toString() || '--';
 };
