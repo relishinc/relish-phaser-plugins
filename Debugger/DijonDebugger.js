@@ -173,6 +173,9 @@ Phaser.Plugin.DijonDebugger.prototype.update = function () {
 };
 
 Phaser.Plugin.DijonDebugger.prototype.render = function () {
+    if (!this.showSpriteBounds)
+        return;
+
     var hitArea,
         pos,
         parent = this.selectedObject;
@@ -190,8 +193,7 @@ Phaser.Plugin.DijonDebugger.prototype.render = function () {
             hitArea.y = pos.y;
 
             this.game.debug.geom(hitArea);
-        }else if (this.showSpriteBounds){
-        }else if (this.showSpriteBounds){
+        }else{
            this.game.debug.spriteBounds(this.selectedObject);
         }
     }
