@@ -9,7 +9,7 @@ Phaser.Plugin.DijonDebugger.prototype.constructor = Phaser.Plugin.DijonDebugger;
 
 Phaser.Plugin.DijonDebugger.prototype.init = function(params){
     if (typeof params === 'undefined'){
-        this.showFPS = this.startOpen = true;
+        this.showFPS = this.startOpen = this.showSpriteBounds = true;
         return;
     }
 
@@ -241,9 +241,9 @@ Phaser.Plugin.DijonDebugger.prototype.getName = function(obj){
         defaultName = (parentName + '_' + childIndex).toString(),
         name;
 
-    if ((obj instanceof Phaser.Sprite || obj instanceof Phaser.Image) && typeof obj.key !== 'undefined' && typeof obj.frame !== 'undefined'){
+    if ((obj instanceof Phaser.Sprite || obj instanceof Phaser.Image) && typeof obj.key !== 'undefined' && typeof obj.frameName !== 'undefined'){
         name = obj.key + '/' + obj.frameName;
-    }else if(obj instanceof Phaser.Image typeof obj.key !== 'string'){
+    }else if(obj instanceof Phaser.Image typeof obj.key !== 'undefined'){
         name = obj.key;
     }else{
         name = defaultName;
