@@ -7,15 +7,13 @@ Phaser.Plugin.DijonDebugger = function (game, parent) {
 Phaser.Plugin.DijonDebugger.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.DijonDebugger.prototype.constructor = Phaser.Plugin.DijonDebugger;
 
-Phaser.Plugin.DijonDebugger.prototype.init = function(params){
-    if (typeof params === 'undefined'){
-        this.showFPS = this.startOpen = this.showSpriteBounds = true;
-        return;
-    }
+Phaser.Plugin.DijonDebugger.prototype.init = function(settings){
+    var params = Phaser.Plugin.DijonDebugger.DEFAULT_PARAMS,
+        prop;
 
-    this.showFPS = params.showFPS !== false;
-    this.startOpen = params.closed !== true;
-    this.showSpriteBounds = params.showSpriteBounds !== false;
+    for (prop in settings){
+        params[key] = settings[key];
+    }
 
     if (this.showFPS){
         this.game.time.advancedTiming = true;
@@ -410,7 +408,7 @@ Phaser.Plugin.DijonDebugger.prototype.updateProps = function(obj){
             type = prop.type || 'number';
 
             if(typeof prop === 'object'){
-                if (prop.xy && typeof obj[prop.prop].x !== 'undefined' && typeof obj[prop.prop].y !== 'undefined'){
+                if (typeof obj[prop.prop] !== 'undefined' && prop.xy && typeof obj[prop.prop].x !== 'undefined' && typeof obj[prop.prop].y !== 'undefined'){
                     id = prop.prop+'_x';
                     $input = this.$div.find('#'+id);
                     $input.val(obj[prop.prop].x);
@@ -569,3 +567,9 @@ Phaser.Plugin.DijonDebugger.PROPS_LIST = [
     {title:'Visibility', props:['alpha', {prop:'visible', type:'boolean', input:'checkbox'}]},
     {title:'Text', props:[{prop:'text', type:'string', input:'textarea', cols:12}, 'lineSpacing', 'fontSize', {prop:'align', type:'string'}]}
 ];
+
+Phaser.Plugin.DijonDebugger.DEFAULT_PARAMS = {
+    showFPS: true,
+    startOpen: true,
+    showSpriteBounds: true
+};
