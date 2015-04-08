@@ -15,7 +15,9 @@ Phaser.Plugin.DijonDebugger.prototype.init = function(settings){
         params[key] = settings[key];
     }
 
-    if (this.showFPS){
+    this.params = params;
+
+    if (this.params.showFPS){
         this.game.time.advancedTiming = true;
     }
 };
@@ -84,7 +86,7 @@ Phaser.Plugin.DijonDebugger.prototype.initialize = function(){
     this.addToggle();
     this.refresh();
 
-    if (this.startOpen){
+    if (this.params.startOpen){
         this.toggleState();
     }
 
@@ -130,7 +132,7 @@ Phaser.Plugin.DijonDebugger.prototype.setJQueryVariables = function(){
 
     this.$refreshbutton.on('click', function(){self.refresh();});
 
-    if (this.showFPS){
+    if (this.params.showFPS){
         this.$fps = $('#dijon-debugger-fps');
     }
 
@@ -171,7 +173,7 @@ Phaser.Plugin.DijonDebugger.prototype.update = function () {
 };
 
 Phaser.Plugin.DijonDebugger.prototype.render = function () {
-    if (!this.showSpriteBounds)
+    if (!this.params.showSpriteBounds)
         return;
 
     var hitArea,
