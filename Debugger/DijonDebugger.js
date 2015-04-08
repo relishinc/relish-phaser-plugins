@@ -12,7 +12,7 @@ Phaser.Plugin.DijonDebugger.prototype.init = function(settings){
         prop;
 
     for (prop in settings){
-        params[key] = settings[key];
+        params[prop] = settings[prop];
     }
 
     this.params = params;
