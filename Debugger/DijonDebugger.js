@@ -567,7 +567,7 @@ Phaser.Plugin.DijonDebugger.PROPS_LIST = [
     {title:'Pivot', props:[{prop:'pivot', xy:true, editAll:false, center:true, centerFunc:'centerPivot'}]},
     {title:'Anchor', props:[{prop:'anchor', xy:true, editAll:false, center:true, centerFunc:'centerAnchor'}]},
     {title:'Visibility', props:['alpha', {prop:'visible', type:'boolean', input:'checkbox'}]},
-    {title:'Text', props:[{prop:'text', type:'string', input:'textarea', cols:12}, 'lineSpacing', 'fontSize', {prop:'align', type:'string'}]}
+    {title:'Text', props:[{prop:'text', type:'string', input:'textarea', cols:12}, 'fontSize', 'lineSpacing', 'wordWrapWidth', {prop:'align', type:'string'}]}
 ];
 
 Phaser.Plugin.DijonDebugger.DEFAULT_PARAMS = {
