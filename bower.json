@@ -1,23 +1,23 @@
 {
-  "main": "Debugger/DijonDebugger.js",
-  "name": "relish-phaser-plugins",
-  "version": "0.0.8",
-  "authors": [
-    "Anthony Sapp <anthony@reli.sh>"
-  ],
-  "description": "Relish's plugins for making games with Phaser",
-  "keywords": [
-    "plugins",
-    "phaser",
-    "relish"
-  ],
-  "license": "MIT",
-  "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ]
+    "main": "Debugger/DijonDebugger.js",
+    "name": "relish-phaser-plugins",
+    "version": "0.0.9",
+    "authors": [
+        "Anthony Sapp <anthony@reli.sh>"
+    ],
+    "description": "Relish's plugins for making games with Phaser",
+    "keywords": [
+        "plugins",
+        "phaser",
+        "relish"
+    ],
+    "license": "MIT",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ]
 }
